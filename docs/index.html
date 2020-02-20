@@ -9,8 +9,8 @@
     <main>
       <section class="text-submission">
         <h2 tabindex="0">Word <span>Watch</span> 👀</h2>
-        <textarea placeholder="Paste text here"></textarea>
-        <button>Break down</button>
+        <textarea id='text-box' placeholder="Paste text here"></textarea>
+        <button id='btn'>Break down</button>
       </section>
 
       <section class="word-data" tabindex="0">
@@ -29,6 +29,22 @@
           .catch(reason => { console.log(reason.message) });
       }
 
+      function postWord(word) {
+        const body = { 
+          "word": {
+            "value": word
+          }
+        }
+        const url = new URL("https://wordwatch-api.herokuapp.com/api/v1/words")
+        fetch(url.href, {
+          method: 'post',
+          body: JSON.stringify(body),
+          headers: { 'Content-Type': 'application/json' },
+        })
+        .then(res => res.json())
+        .then(json => console.log(console.log(json)));
+      }
+
       async function updateWordBox() {
         let response = await getTopWord()
         let word = Object.keys(response.word);
@@ -38,6 +54,16 @@
       }
 
       setInterval(updateWordBox, 1000)
+
+      document.getElementById('btn').addEventListener("click", function()
+      {
+        let text = document.getElementById('text-box').value
+        let words = text.split(" ")
+        words.forEach(word => {
+          postWord(word)
+        });
+        alert("Your text has been submitted!")
+      })
     </script>
   </body>
 </html>
