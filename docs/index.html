@@ -17,10 +17,28 @@
         <article class="top-word">
           <h3>Top word from Word Watch API: </h3>
         </article>
-        <article class="word-count" tabindex="0">
+        <article class="word-count" tabindex="0" id="word_count">
         </article>
       </section>
     </main>
+    <script>
+      async function getTopWord() {
+        const url = new URL("https://wordwatch-api.herokuapp.com/api/v1/top_word")
+        return await fetch(url.href)
+          .then(data => { return data.json(); })
+          .catch(reason => { console.log(reason.message) });
+      }
+
+      async function updateWordBox() {
+        let response = await getTopWord()
+        let word = Object.keys(response.word);
+        let value = Object.values(response.word);
+
+        document.getElementById("word_count").innerHTML = `${word}: ${value}`
+      }
+
+      
+    </script>
   </body>
 </html>
 
